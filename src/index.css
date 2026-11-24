@@ -237,6 +237,16 @@ button:disabled {
 .game-over button {
     margin-top: 12px;
 }
+.result-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.chain-icon {
+    color: #b8b8ba;
+}
 
 .message {
     color: var(--danger);

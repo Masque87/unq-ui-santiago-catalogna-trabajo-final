@@ -8,6 +8,7 @@ import timerIcon from './assets/timer.svg';
 import trophyIcon from './assets/trophy.svg';
 import medalIcon from './assets/medal.svg';
 import wordIcon from './assets/word.svg';
+import chainIcon from './assets/chain.svg';
 
 const MAX_NAME_LENGTH = 10;
 const LOW_TIME_SECONDS = 5;
@@ -116,8 +117,11 @@ function App() {
                     {isFinished ? (
                         <div className="game-over">
                             <h2>Game over!</h2>
-                            <p>Chained words: {chain.length}</p>
-                            <p>
+                            <p className="result-line">
+                                <Icon src={chainIcon} className="chain-icon" />
+                                Chained words: {chain.length}
+                            </p>
+                            <p className="result-line">
                                 <Icon src={coinStackIcon} className="coin" />
                                 Final score: {score}
                             </p>
