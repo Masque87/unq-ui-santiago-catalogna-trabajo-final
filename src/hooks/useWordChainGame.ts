@@ -7,7 +7,7 @@ import {
     normalizeWord,
 } from '../utils/wordRules';
 
-const TURN_SECONDS = 15;
+export const TURN_SECONDS = 15;
 
 type GameStatus = 'waiting' | 'playing' | 'finished';
 

@@ -1,4 +1,3 @@
-// Lowercases and removes accents, but keeps the "ñ" as its own letter.
 export function normalizeWord(word: string): string {
     return word
         .trim()
