@@ -27,13 +27,13 @@ export function useWordChainGame() {
     useEffect(() => {
         if (status !== 'playing' || isValidating) return;
 
-        if (timeLeft === 0) {
-            setStatus('finished');
-            return;
-        }
+        const timeoutId = setTimeout(() => {
+            const nextTime = timeLeft - 1;
+            setTimeLeft(nextTime);
+            if (nextTime === 0) setStatus('finished');
+        }, 1000);
 
-    const timeoutId = setTimeout(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearTimeout(timeoutId);
+        return () => clearTimeout(timeoutId);
     }, [status, timeLeft, chain.length, isValidating]);
 
     async function submitWord(rawWord: string): Promise<boolean> {

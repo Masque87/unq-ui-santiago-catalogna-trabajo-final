@@ -234,7 +234,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
-.game-over button {
+.game-over > button {
     margin-top: 12px;
 }
 .result-line {
@@ -256,6 +256,12 @@ button:disabled {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.chain-scroll {
+    max-height: 60vh;
+    overflow-y: auto;
+    scrollbar-color: var(--tile) transparent;
 }
 
 .help-button {

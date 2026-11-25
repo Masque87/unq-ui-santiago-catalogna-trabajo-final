@@ -12,6 +12,6 @@ export function markHelpAsSeen(): void {
     try {
         localStorage.setItem(STORAGE_KEY, 'true');
     } catch {
-        
+        // If the storage is not available, the help will just show again next time.
     }
 }

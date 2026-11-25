@@ -1,4 +1,4 @@
-import { useRef, useState, type SyntheticEvent } from 'react';
+import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 import { HowToPlay } from './components/HowToPlay';
 import { TURN_SECONDS, useWordChainGame } from './hooks/useWordChainGame';
 import { useLeaderboard } from './hooks/useLeaderboard';
@@ -36,6 +36,7 @@ function App() {
     const [scoreSaved, setScoreSaved] = useState(false);
     const [showHelp, setShowHelp] = useState(() => !hasSeenHelp());
     const inputRef = useRef<HTMLInputElement>(null);
+    const chainRef = useRef<HTMLOListElement>(null);
 
     const isFinished = status === 'finished';
     const isLowTime = status === 'playing' && timeLeft <= LOW_TIME_SECONDS;
@@ -44,6 +45,11 @@ function App() {
     const barColor = `hsl(${Math.round(timeRatio * 120)}, 65%, 42%)`;
 
     const rows = Array.from({ length: LEADERBOARD_SLOTS }, (_, index) => entries[index]);
+
+    useEffect(() => {
+        const list = chainRef.current;
+        if (list) list.scrollTop = list.scrollHeight;
+    }, [chain.length]);
 
     async function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -69,6 +75,8 @@ function App() {
         setShowHelp(false);
         inputRef.current?.focus();
     }  
+
+
 
     return (
         <main>
@@ -115,9 +123,9 @@ function App() {
                 <aside className="panel">
                     <h2 className="panel-title">
                       <Icon src={chainIcon} />
-                      Chain
+                        Chain
                     </h2>
-                    <ol className="chain">
+                    <ol className="chain chain-scroll" ref={chainRef}>
                         {chain.map((word, wordIndex) => (
                             <li key={word}>
                                 {word.split('').map((letter, letterIndex) => {

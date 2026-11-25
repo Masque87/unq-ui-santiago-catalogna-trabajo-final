@@ -16,5 +16,9 @@ export function loadLeaderboard(): LeaderboardEntry[] {
 }
 
 export function saveLeaderboard(entries: LeaderboardEntry[]): void {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch {
+        // If the storage is not available, the scores just won't persist after a reload.
+    }
 }
