@@ -1,6 +1,8 @@
-import { useState, type SyntheticEvent } from 'react';
+import { useRef, useState, type SyntheticEvent } from 'react';
+import { HowToPlay } from './components/HowToPlay';
 import { TURN_SECONDS, useWordChainGame } from './hooks/useWordChainGame';
 import { useLeaderboard } from './hooks/useLeaderboard';
+import { hasSeenHelp, markHelpAsSeen } from './services/helpStorage';
 import { Icon } from './components/Icon';
 import coinIcon from './assets/coinP.svg';
 import coinStackIcon from './assets/coin.svg';
@@ -9,6 +11,7 @@ import trophyIcon from './assets/trophy.svg';
 import medalIcon from './assets/medal.svg';
 import wordIcon from './assets/word.svg';
 import chainIcon from './assets/chain.svg';
+import playerIcon from './assets/player.svg';
 
 const MAX_NAME_LENGTH = 10;
 const LOW_TIME_SECONDS = 5;
@@ -31,10 +34,11 @@ function App() {
     const [input, setInput] = useState('');
     const [playerName, setPlayerName] = useState('');
     const [scoreSaved, setScoreSaved] = useState(false);
+    const [showHelp, setShowHelp] = useState(() => !hasSeenHelp());
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const isFinished = status === 'finished';
     const isLowTime = status === 'playing' && timeLeft <= LOW_TIME_SECONDS;
-
 
     const timeRatio = timeLeft / TURN_SECONDS;
     const barColor = `hsl(${Math.round(timeRatio * 120)}, 65%, 42%)`;
@@ -60,6 +64,12 @@ function App() {
         setScoreSaved(false);
     }
 
+    function handleCloseHelp() {
+        markHelpAsSeen();
+        setShowHelp(false);
+        inputRef.current?.focus();
+    }  
+
     return (
         <main>
             <header className="header">
@@ -67,7 +77,20 @@ function App() {
                     <Icon src={coinIcon} className="coin" />
                     Score: <strong>{score}</strong>
                 </p>
-                <h1>Word Chain</h1>
+
+                <div className="title">
+                    <h1>Word Chain</h1>
+                    <button
+                        className="help-button"
+                        onClick={() => setShowHelp(true)}
+                        disabled={status === 'playing'}
+                        aria-label="How to play"
+                        title={status === 'playing' ? 'Not available while playing' : 'How to play'}
+                    >
+                        ?
+                    </button>
+                </div>
+
                 <p className={isLowTime ? 'stat stat-right danger' : 'stat stat-right'}>
                     <Icon src={timerIcon} />
                     Time: <strong>{timeLeft}s</strong>
@@ -90,7 +113,10 @@ function App() {
 
             <div className="layout">
                 <aside className="panel">
-                    <h2>Chain</h2>
+                    <h2 className="panel-title">
+                      <Icon src={chainIcon} />
+                      Chain
+                    </h2>
                     <ol className="chain">
                         {chain.map((word, wordIndex) => (
                             <li key={word}>
@@ -147,6 +173,7 @@ function App() {
                     ) : (
                         <form onSubmit={handleSubmit}>
                             <input
+                                ref={inputRef}
                                 value={input}
                                 onChange={(event) => setInput(event.target.value)}
                                 placeholder={
@@ -179,7 +206,9 @@ function App() {
                         <thead>
                             <tr>
                                 <th aria-label="Rank" />
-                                <th>Player</th>
+                                <th>
+                                    <Icon src={playerIcon} /> Player
+                                </th>
                                 <th aria-label="Score" title="Score">
                                     <Icon src={coinIcon} />
                                 </th>
@@ -190,7 +219,10 @@ function App() {
                         </thead>
                         <tbody>
                             {rows.map((entry, index) => (
-                                <tr key={index} className={index >= MEDALS ? 'row-rest' : undefined}>
+                                <tr
+                                    key={index}
+                                    className={index >= MEDALS ? 'row-rest' : undefined}
+                                >
                                     <td>
                                         {entry && index < MEDALS && (
                                             <Icon
@@ -212,6 +244,8 @@ function App() {
                     )}
                 </aside>
             </div>
+
+            {showHelp && <HowToPlay onClose={handleCloseHelp} />}
         </main>
     );
 }
