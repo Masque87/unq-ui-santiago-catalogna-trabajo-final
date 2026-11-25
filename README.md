@@ -55,7 +55,7 @@ El objetivo es formar la cadena más larga posible de palabras válidas antes de
 ```
 src/
   assets/       Íconos SVG
-  components/   Componentes de UI (Icon, HowToPlay)
+  components/   Componentes de UI (Header, ChainPanel, WordForm, GameOver, Leaderboard, HowToPlay, Icon)
   hooks/        Lógica del juego (useWordChainGame) y del ranking (useLeaderboard)
   services/     Acceso a la API (wordApi) y al localStorage (leaderboardStorage, helpStorage)
   utils/        Reglas de palabras (wordRules)
